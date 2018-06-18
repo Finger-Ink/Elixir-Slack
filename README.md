@@ -23,7 +23,7 @@ def application do
 end
 
 def deps do
-  [{:slack, "~> 0.12.0"}]
+  [{:slack, "~> 0.14.0"}]
 end
 ```
 
@@ -120,6 +120,29 @@ names = Slack.Web.Users.list(%{token: "TOKEN_HERE"})
   member["real_name"]
 end)
 ```
+
+### Web Client Configuration
+
+A custom client callback module can be configured for cases in which you need extra control
+over how calls to the web API are performed. This can be used to control timeouts, or to add additional
+custom error handling as needed.
+
+```elixir
+config :slack, :web_http_client, YourApp.CustomClient
+```
+
+All Web API calls from documenation-generated modules/functions will call `post!/2` with the generated url
+and body passed as arguments.
+
+In the case where you only need to control the options passed to HTTPoison/hackney, the default client accepts
+a keyword list as an additional configuration parameter. Note that this is ignored if configuring a custom client.
+
+See [HTTPoison docs](https://hexdocs.pm/httpoison/HTTPoison.html#request/5) for a list of avilable options.
+
+```elixir
+config :slack, :web_http_client_opts, [timeout: 10_000, recv_timeout: 10_000]
+```
+
 
 ## Testing
 
